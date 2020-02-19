@@ -1,0 +1,270 @@
+
+    <html>
+      <head>
+        <title>rpFBA</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+      </head>
+      <body>
+        <div id='content'>
+    <h1 id="rpfba">rpFBA</h1>
+<p>Reads a single or collection of rpSBML files (as a tar.xz) and a GEM SBML model, merges the two and perform FBA. The addition of the heterologous pathway to the organism of choice. FBA is performed with all defined objectives defined by the <a href="https://co.mbine.org/specifications/sbml.level-3.version-1.fbc.version-2.release-1">FBC</a> SBML package and saved inside custom (BRSynth) annotations. The output is also a collection of rpSBML files in a tar.xz. The merged version of the model may be kept instead of the heterologous pathway alone (default). </p>
+<p>Currently, the following FBA methods have been implemented. FBA, parsimonious FBA and fraction of reaction. The latter forces a source reaction to a fraction of optimum, and then perform FBA using another target reaction.</p>
+<h2 id="information-flow">Information Flow</h2>
+<h3 id="input">Input</h3>
+<p>Required information:</p>
+<ul>
+<li>Fraction of Reaction:<ul>
+<li><strong>Fraction of the source reaction</strong>: (default: 0.75) Float between 0.0 and 1.0, with 0.0 being no flux to 1.0 maximum of optimum</li>
+<li><strong>Source Reaction</strong>: (default: biomass) ID of the source reaction</li>
+<li><strong>Source Coefficient</strong>: (default: 1.0) Float determining the FBA coefficient</li>
+<li><strong>Target Reaction</strong>: (default: RP1_sink) ID of the target reaction</li>
+<li><strong>Target Coefficient</strong>: (default: 1.0) Float determining the FBA coefficient</li></ul></li>
+<li>Parsimonious FBA:<ul>
+<li><strong>Fraction of optimal</strong>: (default: 0.95) </li>
+<li><strong>Target Reaction</strong>: (default: RP1_sink) ID of the target reaction</li>
+<li><strong>Target Coefficient</strong>: (default: 1.0) Float determining the FBA coefficient</li></ul></li>
+<li>FBA:<ul>
+<li><strong>Target Reaction</strong>: (default: RP1_sink) ID of the target reaction</li>
+<li><strong>Target Coefficient</strong>: (default: 1.0) Float determining the FBA coefficient</li></ul></li>
+<li><strong>Input/output format</strong>: (default: TAR) Either use TAR collection of files or single rpSBML file</li>
+<li><strong>Input GEM SBML model</strong>: SBML model</li>
+</ul>
+<p>Advanced options:</p>
+<ul>
+<li><strong>Name of the heterologous pathway</strong>: (default: rp_pathway) Groups ID of the heterologous pathway</li>
+<li><strong>Maximise the objective?</strong>: (default: Yes) If set to No, then minimise the objective</li>
+<li><strong>Don't output the merged model?</strong>: (default: Yes) If Not then the full merged model is output</li>
+<li><strong>IP address of the rpFBA REST service</strong>: IP address of the REST service</li>
+<li><strong>Cytoplasm compartment id</strong>: (default: MNXC3) Compartment ID of interest</li>
+<li><strong>If there are orphan source species, create creation reaction</strong>: (default: No) NOT SUPPORTED: Upon the merge, if within the heterologous species some are orphaned, then create a reaction that produces that species.</li>
+</ul>
+<h3 id="output">Output</h3>
+<ul>
+<li><strong>rpFBA</strong>: The output is a tar.xz archive containing a list of rpSBML files or a single SBML file</li>
+</ul>
+<h2 id="algorithm">Algorithm</h2>
+<p>Three different implementations of constraint based simulation are supported with this tool:</p>
+<ul>
+<li>FBA</li>
+<li>Parsimonious FBA</li>
+<li>Fraction of source reaction: In this method, the flux of a source reaction (For example BIOMASS) is calculated using FBA. Thereafter, the maximal and minimal bounds of that reaction is set from a fraction of that obtimum (default is 0.75) and another FBA is performed for a target reaction. In the pipeline the later would be the reaction that produces the target molecule of interest.</li>
+</ul>
+<h2 id="installing">Installing</h2>
+<p>To build the image using the Dockerfile, use the following image:</p>
+<pre><code>docker build -t brsynth/rpfba-rest:dev -f Dockerfile .
+</code></pre>
+<p>To run the service on localhost, use the following command:</p>
+<pre><code>docker run -p 8883:8888 brsynth/rpfba-rest:dev
+</code></pre>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Docker - <a href="https://docs.docker.com/v17.09/engine/installation/">Install</a></li>
+<li>libSBML - <a href="https://anaconda.org/SBMLTeam/python-libsbml">Anaconda library</a></li>
+<li>cobrapy - <a href="https://github.com/opencobra/cobrapy">CobaraPy</a></li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<p>TODO</p>
+<h2 id="versioning">Versioning</h2>
+<p>Version 0.1</p>
+<h2 id="authors">Authors</h2>
+<ul>
+<li><strong>Melchior du Lac</strong> </li>
+</ul>
+<h2 id="license">License</h2>
+<p>This project is licensed under the MIT License - see the <a href="LICENSE.md">LICENSE.md</a> file for details</p>
+<h2 id="acknowledgments">Acknowledgments</h2>
+<ul>
+<li>Thomas Duigou</li>
+<li>Joan Hérisson</li>
+</ul>
+<h3 id="how-to-cite-rpfba">How to cite rpFBA?</h3>
+<p>TODO</p>
+
+        </div>
+        <style type='text/css'>body {
+  font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #111;
+  background-color: #fdfdfd;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  -o-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  padding: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 5px;
+  }
+
+  body > #content {
+    padding: 0px 20px 20px 20px !important;
+  }
+}
+
+body > #content {
+  margin: 0px;
+  max-width: 900px;
+  border: 1px solid #e1e4e8;
+  padding: 10px 40px;
+  padding-bottom: 20px;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+hr {
+  color: #bbb;
+  background-color: #bbb;
+  height: 1px;
+  flex: 0 1 auto;
+  margin: 1em 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+ * Links
+ */
+a {
+  color: #0366d6;
+  text-decoration: none; }
+  a:visited {
+    color: #0366d6; }
+  a:hover {
+    color: #0366d6;
+    text-decoration: underline; }
+
+pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+}
+
+/**
+  * Code blocks
+  */
+
+code {
+  background-color: rgba(27,31,35,.05);
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  word-wrap: break-word;
+  padding: .2em .4em;
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+}
+
+pre > code {
+  background-color: transparent;
+  border: 0;
+  display: inline;
+  line-height: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  word-wrap: normal;
+  font-size: 100%;
+}
+
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  margin-left: 30px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+  border-left-width: 3px;
+  padding: 0 1em;
+  color: #828282;
+  border-left: 4px solid #e8e8e8;
+  padding-left: 15px;
+  font-size: 18px;
+  letter-spacing: -1px;
+  font-style: italic;
+}
+blockquote * {
+  font-style: normal !important;
+  letter-spacing: 0;
+  color: #6a737d !important;
+}
+
+/**
+ * Tables
+ */
+table {
+  border-spacing: 2px;
+  display: block;
+  font-size: 14px;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+th {
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+/**
+ * Others
+ */
+
+img {
+  max-width: 100%;
+}
+
+p {
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #24292e; }
+
+ul {
+  margin-top: 0; }
+
+li {
+  color: #24292e;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5; }
+
+li + li {
+  margin-top: 0.25em; }
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: #24292e; }
+
+a:visited {
+  color: #0366d6; }
+
+h1, h2, h3 {
+  border-bottom: 1px solid #eaecef;
+  color: #111;
+  /* Darker */ }</style>
+      </body>
+    </html>

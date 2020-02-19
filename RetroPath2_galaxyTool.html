@@ -1,0 +1,254 @@
+
+    <html>
+      <head>
+        <title>RetroPath2</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+      </head>
+      <body>
+        <div id='content'>
+    <h1 id="retropath20">Retropath2.0</h1>
+<p>Build a reaction network from a set of source compounds to a set of sink compounds. Docker implementation with Flask REST, RQ and Redis of the KNIME retropath2.0 workflow. More information can be found <a href="https://www.myexperiment.org/workflows/4987.html">here</a>. </p>
+<h2 id="information-flow">Information Flow</h2>
+<h3 id="input">Input</h3>
+<p>Required information:</p>
+<ul>
+<li><strong>Sink File</strong>: CSV of a target sink molecule (Can use "sink from SBML" node)</li>
+<li><strong>Source File</strong>: CSV list of source molecules (Can use "Make source" node)</li>
+<li><strong>Pathway Length</strong>: An integer determining the maximal pathway length</li>
+</ul>
+<p>Advanced options: </p>
+<ul>
+<li><strong>Rules file</strong>: (optional) An input CSV file with the collections of reaction rules. The default are the rules from RetroPath2.0</li>
+<li><strong>TopX</strong>: (default 100) The maximal number of pathways to retain for each new iteration</li>
+<li><strong>Minimum rule diameter</strong>: (default: 0) Given a reaction rule, set the lower bound promiscuity</li>
+<li><strong>Maximaum rule diameter</strong>: (default: 1000) Given a reaction rule, set the upper bound promiscuity</li>
+<li><strong>mwmax source</strong>: (default: 1000)</li>
+<li><strong>mwmax cof</strong>: (default: 1000)</li>
+<li><strong>Server URL</strong>: Address of the REST service</li>
+<li><strong>Timemout</strong>: (default: 30 min) Limit the execution time of the tool</li>
+<li><strong>Run in forward direction?</strong>: (default: No)</li>
+</ul>
+<h3 id="output">Output</h3>
+<ul>
+<li><strong>RetroPath Pathways</strong>: describes the heterologous pathways calculated to produce a target molecule of interest (Source) with a complete description of the structures of the product and subtrates as well as the reaction rules applied to it. </li>
+</ul>
+<h2 id="installing">Installing</h2>
+<p>Compile the docker image if it hasen't already been done:</p>
+<pre><code>docker build -t brsynth/retropath2-redis:dev .
+</code></pre>
+<p>To run the service on a localhost as the Galaxy interface, after creating the image run the REST service using the following command:</p>
+<pre><code>docker run -p 8888:8888 brsynth/retropath2
+</code></pre>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Docker - <a href="https://docs.docker.com/v17.09/engine/installation/">Install</a></li>
+<li>Base image: <a href="https://hub.docker.com/r/ibisba/knime-base">ibisba/knime-base:3.6.2</a></li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<p>TODO</p>
+<h2 id="versioning">Versioning</h2>
+<p>Version 0.1</p>
+<h2 id="authors">Authors</h2>
+<ul>
+<li><strong>Melchior du Lac</strong></li>
+<li>Thomas Duigou</li>
+<li>Baudoin Delépine</li>
+<li>Pablo Carbonell</li>
+</ul>
+<h2 id="license">License</h2>
+<p><a href="https://github.com/Galaxy-SynBioCAD/RetroPath2/blob/master/LICENSE">GPL3</a></p>
+<h2 id="acknowledgments">Acknowledgments</h2>
+<ul>
+<li>Joan Hérisson</li>
+</ul>
+<h3 id="how-to-cite-retropath20">How to cite RetroPath2.0?</h3>
+<p>Delépine B, Duigou T, Carbonell P, Faulon JL. RetroPath2.0: A retrosynthesis workflow for metabolic engineers. Metabolic Engineering, 45: 158-170, 2018. DOI: https://doi.org/10.1016/j.ymben.2017.12.002</p>
+
+        </div>
+        <style type='text/css'>body {
+  font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #111;
+  background-color: #fdfdfd;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  -o-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  padding: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 5px;
+  }
+
+  body > #content {
+    padding: 0px 20px 20px 20px !important;
+  }
+}
+
+body > #content {
+  margin: 0px;
+  max-width: 900px;
+  border: 1px solid #e1e4e8;
+  padding: 10px 40px;
+  padding-bottom: 20px;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+hr {
+  color: #bbb;
+  background-color: #bbb;
+  height: 1px;
+  flex: 0 1 auto;
+  margin: 1em 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+ * Links
+ */
+a {
+  color: #0366d6;
+  text-decoration: none; }
+  a:visited {
+    color: #0366d6; }
+  a:hover {
+    color: #0366d6;
+    text-decoration: underline; }
+
+pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+}
+
+/**
+  * Code blocks
+  */
+
+code {
+  background-color: rgba(27,31,35,.05);
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  word-wrap: break-word;
+  padding: .2em .4em;
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+}
+
+pre > code {
+  background-color: transparent;
+  border: 0;
+  display: inline;
+  line-height: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  word-wrap: normal;
+  font-size: 100%;
+}
+
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  margin-left: 30px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+  border-left-width: 3px;
+  padding: 0 1em;
+  color: #828282;
+  border-left: 4px solid #e8e8e8;
+  padding-left: 15px;
+  font-size: 18px;
+  letter-spacing: -1px;
+  font-style: italic;
+}
+blockquote * {
+  font-style: normal !important;
+  letter-spacing: 0;
+  color: #6a737d !important;
+}
+
+/**
+ * Tables
+ */
+table {
+  border-spacing: 2px;
+  display: block;
+  font-size: 14px;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+th {
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+/**
+ * Others
+ */
+
+img {
+  max-width: 100%;
+}
+
+p {
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #24292e; }
+
+ul {
+  margin-top: 0; }
+
+li {
+  color: #24292e;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5; }
+
+li + li {
+  margin-top: 0.25em; }
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: #24292e; }
+
+a:visited {
+  color: #0366d6; }
+
+h1, h2, h3 {
+  border-bottom: 1px solid #eaecef;
+  color: #111;
+  /* Darker */ }</style>
+      </body>
+    </html>

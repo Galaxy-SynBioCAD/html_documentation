@@ -1,0 +1,440 @@
+
+    <html>
+      <head>
+        <title>rpVisualiser</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+      </head>
+      <body>
+        <div id='content'>
+    <h1 id="rpvisualiser">rpVisualiser</h1>
+<p>Visualisation of pathways predicted from the RetroPath Suite.</p>
+<h2 id="important">Important</h2>
+<p>Input file expected by the viewer:</p>
+<ul>
+<li><code>network.json</code>: should contains 2 variable, namely <code>network</code> and<br />
+<code>pathways_info</code>.</li>
+</ul>
+<h2 id="execute">Execute</h2>
+<p>From a given -- and compatible -- rpSBML tar file:</p>
+<pre><code class="bash language-bash">python -m rpviz.cli rpSBML.tar outfolder
+</code></pre>
+<h2 id="example">Example</h2>
+<pre><code class="bash language-bash">conda activate rpviz
+python -m rpviz.cli '../data/Galaxy1015-[rpGlobalScore].tar' ../data/outfolder_test_42
+</code></pre>
+<h2 id="installing">Installing</h2>
+<h3 id="build-the-docker">Build the docker</h3>
+<pre><code>docker build -t brsynth/rpvisualiser-rest -f Dockerfile .
+</code></pre>
+<h3 id="run-the-rest-service">Run the REST service</h3>
+<pre><code>docker run -p 8875:8888 brsynth/rpvisualiser-rest
+</code></pre>
+<h2 id="setting-up">Setting up</h2>
+<p>Below are instructions to set up a conda environment. This is still in development.</p>
+<pre><code class="bash language-bash">conda create -n rpviz
+source activate rpviz
+conda install -y -c rdkit rdkit=2019.03.1.0
+conda install -y -c bioconda python-libsbml
+conda install -y -c bioconda pubchempy
+conda install -y -c conda-forge lxml
+conda install -y -c conda-forge requests
+conda install -y -c conda-forge cirpy
+conda install -y -c conda-forge networkx
+conda install -y -c conda-forge beautifulsoup4
+conda install -y -c conda-forge matplotlib
+</code></pre>
+<p><strong>Important</strong>: one also needs to download the rpSBML library and make it accessible from the pathway visualiser CLI.</p>
+<h2 id="json-objects">JSON objects</h2>
+<h3 id="network">network</h3>
+<p>Below an overview of the <code>network</code> object expected by the JS viewer:</p>
+<pre><code class="json language-json">{
+    "elements": {
+        "nodes": [
+            {
+                "data": {
+                    "id": "string",
+                    "path_ids": ["string"],
+                    "type": "reaction",
+                    "label": "string",
+                    "all_labels": ["string"],
+                    "svg": "string",
+                    "xlinks": [{"db_name":  "string", "entity_id": "string", "url": "string"}, ...],
+                    "rsmiles": "string",
+                    "rule_ids": ["string"],
+                    "ec_numbers": ["string"],
+                    "thermo_dg_m_gibbs": float,
+                    "smiles": null,
+                    "inchi": null,
+                    "inchikey": null,
+                    "target_chemical": null,
+                    "sink_chemical": null,
+                    "thermo_dg_m_formation": null, 
+                    "cofactor": null
+                }
+            },
+            ...,
+            ...,
+            ...,
+            {
+                "data": {
+                    "id": "string",
+                    "path_ids": ["string"],
+                    "type": "chemical",
+                    "label": "string",
+                    "all_labels": ["string"],
+                    "svg": "string",
+                    "xlinks": [{"db_name":  "string", "entity_id": "string", "url": "string"}, ...],
+                    "rsmiles": null,
+                    "rule_ids": null,
+                    "ec_numbers": null,
+                    "thermo_dg_m_gibbs": null,
+                    "smiles": "string",
+                    "inchi": "string",
+                    "inchikey": "string",
+                    "target_chemical": integer,
+                    "sink_chemical": integer,
+                    "thermo_dg_m_formation": float, 
+                    "cofactor": integer
+                }
+            },
+            ...
+            ...
+            ...
+        ],
+        "edges": [
+            {
+                "data": {
+                    "id": "string",
+                    "path_ids": ["string"],
+                    "source": "string",
+                    "target": "string"
+                }
+            },
+            ...
+            ...
+            ...
+        ]
+    }
+}
+</code></pre>
+<p><code>network</code> is composed of 2 types of nodes ("reaction" and "chemical"), and 1 type of edge. What ever the node type,<br />
+all the keys ('id', 'path_ids', …) should be present in each node.</p>
+<h4 id="reaction-node">reaction node</h4>
+<p>For reaction node, the content should be: </p>
+<ul>
+<li><code>id</code>, (string), <strong>required value</strong> -- The canonic reaction SMILES of the reactions. It will be use as the<br />
+unique ID of the node. Example: <code>"id": "[H]OC(=O)C([H])=C([H])C([H])=C([H])C(=O)O[H]&gt;&gt;O=O.[H]Oc1c([H])c([H])c([H])c([H])c1O[H]"</code></li>
+<li><code>path_ids</code>: (list of strings), <strong>required values</strong> -- The list of unique pathway IDs into which the reaction<br />
+is involved. It should not contains duplicates. Example: <code>"path_ids": ["rp_3_1", "rp_2_1", "rp_3_2", "rp_1_1"]</code></li>
+<li><code>type</code>, (string), <strong>required value</strong> -- Should be <code>"reaction"</code> for reaction node. It is this value that define<br />
+the type of node.</li>
+<li><code>label</code>, (string), <strong>required value</strong> -- The label to be printed for the node.</li>
+<li><code>all_labels</code>, (list of strings), <strong>optional</strong> -- All possible labels for the node.</li>
+<li><code>svg</code>, (string), <strong>optional value</strong> -- SVG depiction of the reaction.</li>
+<li><code>xlinks</code> (list of dictionaries), <strong>optional</strong> -- Crosslinks to the reaction. Each individual crosslink should<br />
+be described in a dictionary having keys: "db<em>name", "entity</em>id", "url".   </li>
+<li><code>rsmiles</code>, (string), <strong>optional</strong> -- The canonical reaction SMILES.</li>
+<li><code>rule_ids</code>, (list of strings), <strong>optional</strong> -- The reaction rule IDs.</li>
+<li><code>ec_numbers</code>, (list of strings), <strong>optional</strong> -- The EC numbers.</li>
+<li><code>thermo_dg_m_gibbs</code>, (float), <strong>optional</strong> -- The dG Gibbs energy of the reaction (in mM concentration context).</li>
+<li><code>smiles</code>, (string), <strong>not used</strong> -- Value should be <code>null</code> (meaningful for chemical node only).</li>
+<li><code>inchi</code>, (string),  <strong>required value</strong> -- Value should be <code>null</code>.</li>
+<li><code>inchikey</code>, (string),  <strong>required value</strong> -- Value should be <code>null</code>.</li>
+<li><code>target_chemical</code>, (string), <strong>not used</strong> -- Value should be <code>null</code>.</li>
+<li><code>sink_chemical</code>, (string), <strong>not used</strong> -- Value should be <code>null</code>.</li>
+<li><code>thermo_dg_m_formation</code>, (string), <strong>not used</strong> -- Value should be <code>null</code>.</li>
+<li><code>cofactor</code>, (string), <strong>not used</strong> -- Value should be <code>null</code>.</li>
+</ul>
+<h4 id="chemical-node">chemical node</h4>
+<p>For chemical node, the content should be:</p>
+<ul>
+<li><code>id</code>, (string), <strong>required value</strong> -- The InChIKey of the chemical. It will be use as the unique ID of the node.</li>
+<li><code>path_ids</code>: (list of strings), <strong>required values</strong> -- The list of unique pathway IDs into which the chemical is<br />
+involved. It should not contains duplicates. Example: <code>"path_ids": ["rp_3_1", "rp_2_1", "rp_3_2", "rp_1_1"]</code></li>
+<li><code>type</code>, (string), <strong>required value</strong> -- Should be <code>"chemical"</code> for chemical node. It is this value that define the<br />
+type of node.</li>
+<li><code>label</code>, (string), <strong>required value</strong> -- The label to be printed for the node.</li>
+<li><code>all_labels</code>, (list of strings), <strong>optional</strong> -- All possible labels for the node.</li>
+<li><code>svg</code>, (string),   <strong>optional value</strong> -- SVG depiction of the entity.</li>
+<li><code>xlinks</code> (list of dictionaries), <strong>optional</strong> -- Crosslinks to the chemical. Each individual crosslink should<br />
+be described in a dictionary having keys: "db<em>name", "entity</em>id", "url".</li>
+<li><code>rsmiles</code>, (string), <strong>not used</strong> -- Value should be <code>null</code> (meaningful for reaction node only).</li>
+<li><code>rule_ids</code>, (list of strings), <strong>not used</strong> -- Value should be <code>null</code>.</li>
+<li><code>ec_numbers</code>, (list of strings), <strong>not used</strong> -- Value should be <code>null</code>.</li>
+<li><code>thermo_dg_m_gibbs</code>, (float), <strong>not used</strong> -- Value should be <code>null</code>.</li>
+<li><code>smiles</code>, (string), <strong>required value</strong> -- The canonic SMILES.</li>
+<li><code>inchi</code>, (string),  <strong>required value</strong> -- InChI.</li>
+<li><code>inchikey</code>, (string),  <strong>required value</strong> -- InChIKey.</li>
+<li><code>target_chemical</code>, (string), <strong>required</strong> -- Flag to designate the target. Value should be either 0 (not the<br />
+target) or 1 (it is).</li>
+<li><code>sink_chemical</code>, (string), <strong>optional value</strong> -- Flag to designate chemical that are available in the sink. Value<br />
+should be either 0 (not in the sink) or (it is).</li>
+<li><code>thermo_dg_m_formation</code>, (string), <strong>optional value</strong> -- The dG of formation of the chemical (in mM concentration context).</li>
+<li><code>cofactor</code>, (string), <strong>required</strong> -- Flag to designate cofactor chemicals (eg: ATP, NADH, …). Value should<br />
+be either 0 (not a cofactor) or 1 (it is).</li>
+</ul>
+<h4 id="edge">edge</h4>
+<p>For edge, the content should be:</p>
+<ul>
+<li><code>id</code>, (string), <strong>required value</strong> -- Some unique string to be used as edge ID. To build such ID, follow the <br />
+convention: <code>A_B</code> where <code>A</code> is the source node ID (eg a chemical node ID) and <code>B</code> is the target node ID (eg <br />
+a reaction node ID).</li>
+<li><code>path_ids</code>: (list of strings), <strong>required values</strong> -- The list of unique pathway IDs into which the edge is<br />
+involved in.</li>
+<li><code>source</code>: the source node ID.</li>
+<li><code>target</code>: the target node ID.</li>
+</ul>
+<h3 id="pathways_info">pathways_info</h3>
+<p>The pathway_info JSON object purpose is to store information related to each pathways. Notice that order of <br />
+pathway matter: the JS viewer will print the pathways in the order they are given in this object. Here is<br />
+the content:</p>
+<pre><code class="json language-json">{
+    "path_id1": {
+        "path_id": "path_id1",
+        "node_ids": ["node_id1", "node_id2", ...],
+        "edge_ids": ["edge_id1", "edge_id2", ...],
+        "thermo_dg_m_gibbs": float,
+        "fba_target_flux":  float,
+        "nb_steps": interger,
+        "scores": {
+            "score_type_1": normalised integer,
+            "score_type_2": normalised integer,
+            ...
+        },
+    },
+    "path_id2": {...},
+    ...
+    ...
+    ...
+}
+</code></pre>
+<p>Where:</p>
+<ul>
+<li><code>path_id</code> is the pathway ID,</li>
+<li><code>node_ids</code> and <code>edge_ids</code> lists the nodes and edges involved in this pathway,</li>
+<li><code>thermo_dg_m_gibbs</code> expresses the thermodynamics of the pathway</li>
+<li><code>fba_target_flux</code> is the FBA flux value of the pathway (based on the artificial FBA reaction consuming the target)</li>
+<li><code>nb_steps</code> is the number of reactions involved in the pathway</li>
+<li><code>scores</code> gives the pathway scores.</li>
+</ul>
+<h2 id="implementation-choices">Implementation choices</h2>
+<ul>
+<li><p>If a compound cannot be associated to an inchikey (typically, in the case of a generic compound like<br />
+<code>NAD-OR-NADP</code>), then the MNX ID is used as ID in the network.json file. If no MNX is available, then an<br />
+error is logged and the execution is continued.</p></li>
+<li><p>rpSBML file name should end by <code>.sbml.xml</code></p></li>
+<li><p>Target chemical should be have a SBML name that starts by <code>TARGET</code></p></li>
+</ul>
+<h2 id="known-bugs-and-feature-requests">Known bugs and feature requests</h2>
+<h3 id="future-release-todo">Future release TODO</h3>
+<p>Fix information into the JSON:</p>
+<ul>
+<li>Fix the URLs for erroneous reaction and chemical crosslinks</li>
+</ul>
+<p>Add information into the JSON:</p>
+<ul>
+<li>Build a dedicated section for sequence crosslinks</li>
+<li>Add annotation about the rule diameter to reaction nodes</li>
+<li>Add crosslinks to template reactions used for the rules</li>
+</ul>
+<h2 id="authors">Authors</h2>
+<ul>
+<li>Thomas Duigou</li>
+<li>Melchior du Lac </li>
+</ul>
+<h2 id="license">License</h2>
+<p>This project is licensed under the MIT License - see the <a href="LICENSE">LICENSE</a> file for details</p>
+<h2 id="acknowledgments">Acknowledgments</h2>
+<ul>
+<li>Anaelle Badier</li>
+<li>Pablo Carbonell</li>
+</ul>
+
+        </div>
+        <style type='text/css'>body {
+  font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #111;
+  background-color: #fdfdfd;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  -o-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  padding: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 5px;
+  }
+
+  body > #content {
+    padding: 0px 20px 20px 20px !important;
+  }
+}
+
+body > #content {
+  margin: 0px;
+  max-width: 900px;
+  border: 1px solid #e1e4e8;
+  padding: 10px 40px;
+  padding-bottom: 20px;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+hr {
+  color: #bbb;
+  background-color: #bbb;
+  height: 1px;
+  flex: 0 1 auto;
+  margin: 1em 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+ * Links
+ */
+a {
+  color: #0366d6;
+  text-decoration: none; }
+  a:visited {
+    color: #0366d6; }
+  a:hover {
+    color: #0366d6;
+    text-decoration: underline; }
+
+pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+}
+
+/**
+  * Code blocks
+  */
+
+code {
+  background-color: rgba(27,31,35,.05);
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  word-wrap: break-word;
+  padding: .2em .4em;
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+}
+
+pre > code {
+  background-color: transparent;
+  border: 0;
+  display: inline;
+  line-height: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  word-wrap: normal;
+  font-size: 100%;
+}
+
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  margin-left: 30px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+  border-left-width: 3px;
+  padding: 0 1em;
+  color: #828282;
+  border-left: 4px solid #e8e8e8;
+  padding-left: 15px;
+  font-size: 18px;
+  letter-spacing: -1px;
+  font-style: italic;
+}
+blockquote * {
+  font-style: normal !important;
+  letter-spacing: 0;
+  color: #6a737d !important;
+}
+
+/**
+ * Tables
+ */
+table {
+  border-spacing: 2px;
+  display: block;
+  font-size: 14px;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+th {
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+/**
+ * Others
+ */
+
+img {
+  max-width: 100%;
+}
+
+p {
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #24292e; }
+
+ul {
+  margin-top: 0; }
+
+li {
+  color: #24292e;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5; }
+
+li + li {
+  margin-top: 0.25em; }
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: #24292e; }
+
+a:visited {
+  color: #0366d6; }
+
+h1, h2, h3 {
+  border-bottom: 1px solid #eaecef;
+  color: #111;
+  /* Darker */ }</style>
+      </body>
+    </html>
