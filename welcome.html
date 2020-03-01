@@ -22,18 +22,32 @@
         <div class="container">
             <p class="lead">
                 <h2 id="tools">Quick Start</h2>
-                    Use this to import the workflow to your Galaxy instance:
+                    The rpRanker workflow is used to predict using retrowynthesis, possible metabolic pathways to produce a compound of interest. Select this link to import the workflow into your Galaxy instance:
                     <br>
                     <br>
                     <a target="_blank" href="https://synbiocad.micalis.inra.fr/test/u/mdulac/w/rpranker-2" class="btn btn-primary btn-lg">rpRanker Workflow »</a>
                     <br>
                     <br>
+                    <h3 id="tools1">Import SBML Model</h3>
+                    To import valid SBML models select: <strong>Shared Data</strong> on the top panel and then select <strong>Data Libraries</strong> in the scroll down menu.
                     <br>
-                    For example, to predict heterologous pathways for muconic acid in E.Coli enter the following information in the workflow:
+                    <br>
+                    Thereafter, select <strong>Models</strong> and import one or more models from the organism of your choosing.
+                    <br>
+                    <br>
+                    <h3 id="tools2">Run the workflow</h3>
+                    To run the workflow, select <strong>Workflow</strong> in the top panel. Then select the <strong>Imported: rpRanker</strong> workflow dropdown menu and select <strong>Run</strong>. Three different types of information must be provided:
                     <ul>
-                        <li>Target InChI: InChI=1S/C6H6O4/c7-5(8)3-1-2-4-6(9)10/h1-4H,(H,7,8)(H,9,10)/p-2/b3-1-,4-2-</li>
-                        <li>Maximal Pathway Lenght: 3</li>
-                        <li>GEM SBML: E.Coli</li>
+                        <li>InChI structure of the target molecule you want to produce</li>
+                        <li>Maximal length of the predicted pathways</li>
+                        <li>A GEM SBML model (as specified above) in which you would like to produce your compound of interest</li>
+                    </ul>
+                    <br>
+                    For example, if you would like to find potential metabolic routes to produce muconic acid in E.Coli, with a maximal pathway of three enzymatic steps, enter the following information in the workflow:
+                    <ul>
+                        <li>InChI=1S/C6H6O4/c7-5(8)3-1-2-4-6(9)10/h1-4H,(H,7,8)(H,9,10)/p-2/b3-1-,4-2-</li>
+                        <li>3</li>
+                        <li>E.Coli</li>
                     </ul>
                 <h2 id="tools">Tools Reference</h2>
                 <ul>
