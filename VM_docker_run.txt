@@ -1,0 +1,296 @@
+
+
+docker run --name brsynth/rpvisualiser-rest --network rpvisualiser --network-alias rpvisualiser_rest-dev brsynth/rpvisualiser-rest
+
+docker run --name rpreader_rest-dev_mel --network rpreader --network-alias rpreader_rest-dev brsynth/rpreader-rest:rest-dev
+
+docker run --name rpcofactors_rest-dev_mel --network rpcofactors --network-alias rpcofactors_rest-dev brsynth/rpcofactors-rest:dev
+
+docker run --name retropath2_redis_dev --network retropath2 --network-alias retropath2_redis-dev brsynth/retropath2-redis:dev
+
+docker run --name rpreader_rest-dev --network rpreader --network-alias rpreader_rest-dev brsynth/rpreader-rest:dev
+
+docker run --name rpfba_rest-dev --network rpfba --network-alias rpfba_rest-dev brsynth/rpfba-rest:dev
+
+docker run --name rpthermo_rest-dev --network rpthermo --network-alias rpthermo_rest-dev brsynth/rpthermo-rest:dev
+
+docker run --name rpglobalscore_rest-dev --network rpglobalscore --network-alias rpglobalscore_rest-dev brsynth/rpglobalscore-rest:dev
+
+docker run --name rpvisualiser_rest-dev --network rpvisualiser --network-alias rpvisualiser_rest-dev brsynth/rpvisualiser-rest:dev
+
+docker run --name rpselenzyme_rest-dev --network rpselenzyme --network-alias rpselenzyme_rest-dev brsynth/rpselenzyme-rest:dev
+
+docker run --name dnaweaver_rest-dev --network dnaweaver --network-alias dnaweaver_rest-dev brsynth/dnaweaver-rest:dev
+
+docker run --name rpsbmltosbol_rest-dev --network rpsbmltosbol --network-alias rpsbmltosbol_rest-dev brsynth/rpsbmltosbml-rest:dev
+
+docker run --name rpextractsink_rest-dev --network rpextractsink --network-alias rpextractsink_rest-dev brsynth/rpextractsink-rest:dev
+
+################################### XML tools README updates #####################################
+
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpMakeSource/README.md  -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpMakeSource/code/wrap_rpMakeSource.xml 
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpExtractSink/rpExtractSink_image/README.md  -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpExtractSink/rpExtractSink/code/wrap_rpExtractSink.xml 
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/RetroPath2/RetroPath2_image/README.md  -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/RetroPath2/RetroPath2/code/wrap_RetroPath2.xml
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rp2paths/rp2paths_image/README.md  -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rp2paths/rp2paths/code/wrap_rp2paths.xml
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpReader/rpReader_image/README.md -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpReader/rpReader/code/wrap_rp2Reader.xml
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpCofactors/rpCofactors_image/README.md -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpCofactors/rpCofactors/code/wrap_rpCofactors.xml
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpFBA/rpFBA_image/README.md -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpFBA/rpFBA/code/wrap_rpFBA.xml
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpThermo/rpThermo_image/README.md  -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpThermo/rpThermo/code/wrap_rpThermo.xml
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpSelenzyme/rpSelenzyme_image/README.md  -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpSelenzyme/rpSelenzyme/code/wrap_rpSelenzyme.xml
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpFindPathway/rpFindPathway_image/README.md -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpFindPathway/rpFindPathway/code/wrap_rpFindPathway.xml
+python readme_to_galaxyXML.py -input_readme_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpGlobalScore/rpGlobalScore_image/README.md -input_galaxy_xml_path /home/mdulac/workspace/Galaxy-SynBioCAD/rpGlobalScore/rpGlobalScore/code/wrap_rpGlobalScore.xml
+
+
+
+docker run -v /home/mdulac/workspace/Galaxy-SynBioCAD/rpOptimise/results/measured_6/rpSelenzyme.tar.xz:/home/input_file -v ${PWD}/results/:/home/results/ --rm brsynth/rpsbmltosbml-standalone:dev python /home/tool_rpSBMLtoSBOL.py -input /home/input_file -input_format tar -outputSBOL /home/results/output.sbol.xml -rbs True -max_prot_per_react 3 -pathway_id rp_pathway
+
+
+docker run -v /home/mdulac/workspace/Galaxy-SynBioCAD/rpOptimise/results/measured_6/rpSelenzyme.tar.xz:/home/input_file -v /home/mdulac/workspace/Galaxy-SynBioCAD/rpOptimise/results_tmp/:/home/results/ --rm brsynth/rpsbmltosbml-standalone:dev python /home/tool_rpSBMLtoSBOL.py -input /home/input_file -input_format tar -outputSBOL /home/results/output.sbol.xml -rbs True -max_prot_per_react 3 -pathway_id rp_pathway
+
+
+
+docker run -v /home/mdulac/workspace/Galaxy-SynBioCAD/rpOptimise/results/measured_6/rpSelenzyme.tar.xz:/home/input_file -v /home/mdulac/workspace/Galaxy-SynBioCAD/rpOptimise_tmp/results/:/home/results/ --rm brsynth/rpsbmltosbml-standalone:dev python /home/tool_rpSBMLtoSBOL.py -input /home/input_file -input_format tar -outputSBOL /home/results/output.sbol.xml -rbs True -max_prot_per_react 3 -pathway_id rp_pathway
+
+
+#################################################################################################
+#################################################################################################
+#################################################################################################
+
+
+
+
+
+
+
+
+############# TEST ###################################
+
+
+#### Restart the Galaxy docker 
+
+cd /projects/galaxy-test
+docker-compose restart galaxy
+
+# or
+
+cd /projects/galaxy-test
+docker-compose down
+./run.sh
+
+#### logs ---> docker logs -f galaxy-test_galaxy_1
+
+docker exec -it galaxy-test_galaxy_1 bash
+
+#####################################################
+############ organise ###############################
+#####################################################
+
+mkdir /home/mdulac/
+mkdir /home/mdulac/images/
+
+#####################################################
+############ standalone images ######################
+#####################################################
+
+cd /home/mdulac/images/
+
+git clone https://github.com/Galaxy-SynBioCAD/rpBase_image.git
+cd rpBase_image
+git checkout dev
+docker build -t brsynth/rpbase:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/rpCache_image.git
+cd rpCache_image
+git checkout dev
+docker build -t brsynth/rpcache:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/RetroRules_image.git
+cd RetroRules_image
+git checkout standalone-dev
+docker build -t brsynth/retrorules-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/rpGlobalScore_image.git
+cd rpGlobalScore_image
+git checkout standalone-dev
+docker build -t brsynth/rpglobalscore-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/rpReport_image.git
+cd rpReport_image
+git checkout standalone-dev
+docker build -t brsynth/rpreport-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/rpVisualiser_image.git
+cd rpVisualiser_image
+git checkout standalone-dev
+docker build -t brsynth/rpvisualiser-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/rpOptBioDes_image.git
+cd rpOptBioDes_image
+git checkout standalone-dev
+docker build -t brsynth/rpoptbiodes-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/rpMergeSBML_image.git
+cd rpMergeSBML_image
+git checkout standalone-dev
+docker build -t brsynth/mergesbml-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/rpSBMLtoSBOL_image.git
+cd rpSBMLtoSBOL_image
+git checkout standalone-dev
+docker build -t brsynth/rpsbmltosbol-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/DNAWeaver_image.git
+cd DNAWeaver_image
+git checkout standalone-dev
+docker build -t brsynth/dnaweaver-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/PartsGenie_image.git
+cd PartsGenie_image
+git checkout standalone-dev
+docker build -t brsynth/partsgenie-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/extractTaxonomy_image.git
+cd extractTaxonomy_image
+git checkout standalone-dev
+docker build -t brsynth/extracttaxonomy-standalone:dev .
+cd ..
+
+git clone https://github.com/Galaxy-SynBioCAD/rpFBA_image.git
+cd rpFBA_image
+git checkout standalone-dev
+docker build -t brsynth/rpfba-standalone:dev .
+cd ..
+
+################################################################
+############ script install tools ##############################
+################################################################
+
+
+cd /projects/galaxy-test
+
+
+docker exec galaxy-test_galaxy_1 rm -rf tools/extractTaxonomy
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpMakeSource
+docker exec galaxy-test_galaxy_1 rm -rf tools/RetroRules
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpGlobalScore
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpReport
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpVisualiser
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpOptBioDes
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpMergeSBML
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpSBMLtoSBOL
+docker exec galaxy-test_galaxy_1 rm -rf tools/DNAWeaver
+docker exec galaxy-test_galaxy_1 rm -rf tools/PartsGenie
+docker exec galaxy-test_galaxy_1 rm -rf tools/extractTaxonomy
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpFBA
+docker exec galaxy-test_galaxy_1 rm -rf tools/RetroPath2
+docker exec galaxy-test_galaxy_1 rm -rf tools/rp2paths
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpCofactors
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpReader
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpSelenzyme
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpThermo
+docker exec galaxy-test_galaxy_1 rm -rf tools/rpExtractSink
+
+
+bash scripts/tool-install-in-galaxy.sh rpMakeSource local
+bash scripts/tool-install-in-galaxy.sh RetroRules standalone-dev
+bash scripts/tool-install-in-galaxy.sh rpGlobalScore standalone-dev
+bash scripts/tool-install-in-galaxy.sh rpReport standalone-dev
+bash scripts/tool-install-in-galaxy.sh rpVisualiser standalone-dev
+bash scripts/tool-install-in-galaxy.sh rpOptBioDes standalone-dev
+bash scripts/tool-install-in-galaxy.sh rpMergeSBML standalone-dev
+bash scripts/tool-install-in-galaxy.sh rpSBMLtoSBOL standalone-dev
+bash scripts/tool-install-in-galaxy.sh DNAWeaver standalone-dev
+bash scripts/tool-install-in-galaxy.sh PartsGenie standalone-dev
+bash scripts/tool-install-in-galaxy.sh extractTaxonomy standalone-dev
+bash scripts/tool-install-in-galaxy.sh rpFBA standalone-dev
+bash scripts/tool-install-in-galaxy.sh RetroPath2 redis-dev
+bash scripts/tool-install-in-galaxy.sh rp2paths redis-dev
+bash scripts/tool-install-in-galaxy.sh rpCofactors rest-dev
+bash scripts/tool-install-in-galaxy.sh rpReader rest-dev
+bash scripts/tool-install-in-galaxy.sh rpSelenzyme rest-dev-mel
+bash scripts/tool-install-in-galaxy.sh rpThermo rest-dev
+bash scripts/tool-install-in-galaxy.sh rpExtractSink rest-dev
+
+
+#####################################################
+################ script install REST ################
+#####################################################
+
+# delete all the containers running 
+
+# add to /etc/hosts of the docker galaxy the ip address returned by
+
+docker exec galaxy-dev_galaxy_1 ping rp2paths_redis-dev
+
+Example:
+
+
+#####################################################
+############ standalone job_conf ####################
+#####################################################
+
+
+<tool id="RetroRules" destination="docker-local">
+<tool id="rpGlobalScore" destination="docker-local">
+<tool id="rpReport" destination="docker-local">
+<tool id="rpVisualiser" destination="docker-local">
+<tool id="rpOptBioDes" destination="docker-local">
+<tool id="rpMergeSBML" destination="docker-local">
+<tool id="rpSBMLtoSBOL" destination="docker-local">
+<tool id="DNA-Weaver" destination="docker-local">
+<tool id="PartsGenie" destination="docker-local">
+
+  <section id="synbiocad_helper" name="Helper Tools">
+    <tool file="/galaxy/tools/rpMakeSource/code/wrap_rpMakeSource.xml" />
+    <tool file="/galaxy/tools/rpExtractSink/code/wrap_rpExtractSink.xml" />
+    <tool file="/galaxy/tools/rpMergeSBML/code/wrap_rpMergeSBML.xml" />
+  </section>
+  <section id="synbiocad_main" name="SynBioCAD Sillico Design">
+    <tool file="/galaxy/tools/RetroRules/code/wrap_RetroRules.xml" />
+    <tool file="/galaxy/tools/RetroPath2/code/wrap_RetroPath2.xml" />
+    <tool file="/galaxy/tools/rp2paths/code/wrap_rp2paths.xml" />
+    <tool file="/galaxy/tools/rpReader/code/wrap_rpReader.xml" />
+    <tool file="/galaxy/tools/rpCofactors/code/wrap_rpCofactors.xml" />
+    <tool file="/galaxy/tools/rpThermo/code/wrap_rpThermo.xml" />
+    <tool file="/galaxy/tools/rpFBA/code/wrap_rpFBA.xml" />
+    <tool file="/galaxy/tools/rpSelenzyme/code/wrap_rpSelenzyme.xml" />
+    <tool file="/galaxy/tools/rpGlobalScore/code/wrap_rpGlobalScore.xml" />
+  </section>
+  <section id="synbiocad_genetic" name="SynBioCAD Genetic Design">
+    <tool file="/galaxy/tools/rpSBMLtoSBOL/code/wrap_rpSBMLtoSBOL.xml" />
+    <tool file="/galaxy/tools/PartsGenie/code/PartsGenie.xml" />
+    <tool file="/galaxy/tools/DNA-Weaver/code/wrap_DNAWeaver.xml" />
+  </section>
+  <section id="synbiocad_review" name="SynBioCAD Review">
+    <tool file="/galaxy/tools/rpReport/code/wrap_rpReport.xml" />
+    <tool file="/galaxy/tools/rpVisualiser/code/wrap_rpVisualiser.xml" />
+  </section>
+
+
+
+'/galaxy/tools/rpFBA/code/tool_rpFBA.py' -input '/galaxy/database/files/000/dataset_104.dat' -output '/galaxy/database/files/000/dataset_107.dat' -full_sbml '/galaxy/database/files/000/dataset_1.dat' -dont_merge 'True' -pathway_id 'rp_pathway' -compartment_id 'MNXC3' -target_reaction 'RP1_sink' -target_coefficient '1.0' -sim_type 'fraction' -is_max 'True' -input_format 'tar' -source_coefficient '1.0' -source_reaction 'biomass' -fraction_of '0.75'
+
+
+
+docker-compose restart galaxy
+
+Melchior du Lac  11:08 AM
+a cool
+
+Joan  11:08 AM
+Si cela ne fonctionne pas, alors les grands moyens (plus long) :
+11:08
+docker-compose down
+11:08
+./run.sh
